@@ -1,50 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lowerad.c                                       :+:      :+:    :+:   */
+/*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ychedmi <ychedmi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/30 22:58:01 by ychedmi           #+#    #+#             */
-/*   Updated: 2025/03/24 15:40:06 by ychedmi          ###   ########.fr       */
+/*   Created: 2025/03/24 15:37:01 by ychedmi           #+#    #+#             */
+/*   Updated: 2025/03/24 15:37:18 by ychedmi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "pipex.h"
 
-void	re(unsigned int p)
+void	cmd_not_found(char *s, char **cmd)
 {
-	if (p >= 0 && p <= 9)
-		ft_putchar(p + '0');
-	else if (p > 15)
-	{
-		re(p / 16);
-		re(p % 16);
-	}
-	else if ((p % 16 >= 10) && (p % 16 <= 15))
-		ft_putchar(p + 87);
+	ft_printf("Error: command not found: %s\n", s, strerror(1));
+	frtwo(cmd);
+	exit(1);
 }
 
-int	count(unsigned int n)
+void	exit_error(char *s)
 {
-	int	i;
-
-	i = 0;
-	if (n == 0)
-		return (1);
-	while (n != 0)
-	{
-		n = n / 16;
-		i++;
-	}
-	return (i);
+	ft_printf("%s", s, strerror(1));
+	exit(1);
 }
 
-int	ft_lowerad(unsigned int c)
+void	close_fd(int *pipe)
 {
-	int	t;
-
-	t = count(c);
-	re(c);
-	return (t);
+	close(pipe[0]);
+	close(pipe[1]);
+	exit_error("fork error\n");
 }

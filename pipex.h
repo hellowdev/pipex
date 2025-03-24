@@ -1,13 +1,26 @@
-#ifndef PIPEX_H
-#define PIPEX_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ychedmi <ychedmi@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/24 15:37:34 by ychedmi           #+#    #+#             */
+/*   Updated: 2025/03/24 15:39:35 by ychedmi          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include "printf/ft_printf.h"
-#include <stdlib.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <sys/wait.h>
+#ifndef PIPEX_H
+# define PIPEX_H
+
+# include "printf/ft_printf.h"
+# include <stdlib.h>
+# include <fcntl.h>
+# include <errno.h>
+# include <unistd.h>
+# include <string.h>
+# include <stdio.h>
+# include <sys/wait.h>
 
 // tools //
 void	ft_bzero(void *s, size_t n);
@@ -30,8 +43,13 @@ void	seconde_child(int *pipefd, char **av, char **envp);
 char	**awk_split(char *awk);
 char	**param_join(char **firstawk, char *secawk);
 char	*valid_path(char **env, char *cmd);
-int     open_files(char *av);
+int		in_file(char *av);
+int		out_file(char *av);
+
 int		rev_len(char *s);
 void	frone(char *s, char *w);
 void	frtwo(char **s);
+void	exit_error(char *s);
+void	cmd_not_found(char *s, char **cmd);
+void	close_fd(int *pipe);
 #endif

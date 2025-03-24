@@ -1,50 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lowerad.c                                       :+:      :+:    :+:   */
+/*   open_files.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ychedmi <ychedmi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/30 22:58:01 by ychedmi           #+#    #+#             */
-/*   Updated: 2025/03/24 15:40:06 by ychedmi          ###   ########.fr       */
+/*   Created: 2025/03/24 15:32:31 by ychedmi           #+#    #+#             */
+/*   Updated: 2025/03/24 15:33:24 by ychedmi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "pipex.h"
 
-void	re(unsigned int p)
+int	in_file(char *av)
 {
-	if (p >= 0 && p <= 9)
-		ft_putchar(p + '0');
-	else if (p > 15)
+	int	file;
+
+	file = open(av, O_RDONLY);
+	if (file < 0)
 	{
-		re(p / 16);
-		re(p % 16);
+		ft_printf("Error: no such file or directory : %s\n", av, strerror(1));
+		exit(1);
 	}
-	else if ((p % 16 >= 10) && (p % 16 <= 15))
-		ft_putchar(p + 87);
+	return (file);
 }
 
-int	count(unsigned int n)
+int	out_file(char *av)
 {
-	int	i;
+	int	file;
 
-	i = 0;
-	if (n == 0)
-		return (1);
-	while (n != 0)
+	file = open(av, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (file < 0)
 	{
-		n = n / 16;
-		i++;
+		ft_printf("Error: no such file or directory : %s\n", av, strerror(1));
+		exit(1);
 	}
-	return (i);
-}
-
-int	ft_lowerad(unsigned int c)
-{
-	int	t;
-
-	t = count(c);
-	re(c);
-	return (t);
+	return (file);
 }

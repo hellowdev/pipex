@@ -6,130 +6,134 @@
 /*   By: ychedmi <ychedmi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 14:07:01 by ychedmi           #+#    #+#             */
-/*   Updated: 2025/03/23 17:51:30 by ychedmi          ###   ########.fr       */
+/*   Updated: 2025/03/24 15:32:05 by ychedmi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	rev_len(char *s)
+char	*check_seccmd(char *awk)
 {
-	int i;
-	i = ft_strlen(s) - 1;
+	int		i;
+	char	*secawk;
 
-	while (s[i] && 0 < i)
+	i = 0;
+	while (awk[i])
 	{
-		if (s[i] == 39)
-		{
-			break ;
-		}
-		i--;
-	}
-	
-	return (i);
-}
-char	**awk_split(char *awk)
-{
-    int i;
-	char **firstcmd;
-	char **splited;
-	char *get;
-	char *secawk;
-
-	secawk = NULL;
-	splited = NULL;
-	firstcmd = NULL;
-    i = 0;
-    while (awk[i])
-    {
 		if (awk[i] == 39)
 		{
 			secawk = ft_substr(awk, i + 1, rev_len(awk) - i - 1);
-			break ;
+			if (!secawk)
+				return (NULL);
+			return (secawk);
 		}
 		i++;
-    }
-	get = ft_substr(awk, 0, i);
-	firstcmd = ft_split(get, 32);
+	}
+	return (NULL);
+}
+
+char	**awk_split(char *awk)
+{
+	int		i;
+	char	**firstcmd;
+	char	**splited;
+	char	*firstawk;
+	char	*secawk;
+
+	i = 0;
+	secawk = NULL;
+	splited = NULL;
+	firstcmd = NULL;
+	secawk = check_seccmd(awk);
+	if (!secawk && rev_len(awk) > 0)
+		return (NULL);
+	while (awk[i] && awk[i] != 39)
+		i++;
+	firstawk = ft_substr(awk, 0, i);
+	if (!firstawk)
+		return (free(secawk), NULL);
+	firstcmd = ft_split(firstawk, 32);
+	if (!firstcmd)
+		return (frone(firstawk, secawk), NULL);
 	splited = param_join(firstcmd, secawk);
-	free(get);
-	free(firstcmd);
-	return (splited);
+	if (!splited)
+		return (frone(firstawk, secawk), frtwo(firstcmd), NULL);
+	return (frone(firstawk, secawk), frtwo(firstcmd), splited);
 }
 
 char	**param_join(char **firstcmd, char *seccmd)
 {
-	int i;
-	int j;
+	int		i;
+	char	**p;
+
 	i = 0;
-	j = 0;
-	char **p; 
 	while (firstcmd[i])
 		i++;
-	if (seccmd)
-		p = malloc((i + 2) * sizeof(char *));
-	else
-		p = malloc((i + 1) * sizeof(char *));
+	(seccmd) && (i++);
+	p = malloc((i + 1) * sizeof(char *));
 	if (!p)
 		return (NULL);
-	while (j < i)
+	i = -1;
+	while (firstcmd[++i])
 	{
-		p[j] = firstcmd[j];
-		j++;
+		p[i] = ft_strdup(firstcmd[i]);
+		if (!p[i])
+			return (frtwo(p), NULL);
 	}
 	if (seccmd)
-		p[j++] = seccmd;
-	p[j] = NULL;
+	{
+		p[i] = ft_strdup(seccmd);
+		if (!p[i++])
+			return (frtwo(p), NULL);
+	}
+	p[i] = NULL;
 	return (p);
 }
 
 void	first_child(int *pipefd, char **av, char **envp)
 {
-	char **cmd;
-	char *path;
-	int infile;
-    cmd = awk_split(av[2]);
+	char	**cmd;
+	char	*path;
+	int		infile;
+
+	infile = in_file(av[1]);
+	cmd = awk_split(av[2]);
+	if (!cmd)
+		exit(1);
 	path = valid_path(envp, cmd[0]);
-	infile = open_files(av[1]);
-	
-	// int k = 0;
-	// while (cmd[k])
-	// {
-	// 	printf("first child cmd > [%s]\n", cmd[k]);
-	// 	k++;
-	// }
-	// system("leaks -q pipex");
+	if (!path)
+		cmd_not_found(cmd[0], cmd);
 	dup2(infile, 0);
 	close(pipefd[0]);
-	close(infile);
 	dup2(pipefd[1], 1);
+	close(infile);
 	close(pipefd[1]);
-	execve(path, cmd, NULL);
+	execve(path, cmd, envp);
 	frtwo(cmd);
+	free(path);
 	exit(1);
 }
 
 void	seconde_child(int *pipefd, char **av, char **envp)
-{	
-	char **cmd;
-	char *path;
-	int outfile;
+{
+	char	**cmd;
+	char	*path;
+	int		outfile;
+
+	outfile = out_file(av[4]);
 	cmd = awk_split(av[3]);
+	if (!cmd)
+		exit(1);
 	path = valid_path(envp, cmd[0]);
-	outfile = open(av[4], O_CREAT|O_WRONLY|O_TRUNC, 0644);
-	// int k = 0;
-	// while (cmd[k])
-	// {
-	// 	printf("sec child cmd > [%s]\n", cmd[k]);
-	// 	k++;
-	// }
-	
+	if (!path)
+		cmd_not_found(cmd[0], cmd);
 	close(pipefd[1]);
 	dup2(pipefd[0], 0);
 	close(pipefd[0]);
 	dup2(outfile, 1);
 	close(outfile);
-	execve(path, cmd, NULL);
+	execve(path, cmd, envp);
 	frtwo(cmd);
+	free(path);
 	exit(1);
 }
