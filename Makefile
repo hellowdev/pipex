@@ -4,13 +4,10 @@ CFLAGS = -Wall -Wextra -Werror
 
 NAME = pipex
 
-SRC = printf/ft_printf.c	printf/ft_putnbr.c	printf/ft_putchar.c\
-		printf/ft_putstr.c	printf/ft_undecimal.c\
-		printf/ft_padress.c	printf/ft_lowerad.c	printf/ft_upperad.c\
-		pipex.c	bft/ft_bzero.c 	bft/ft_memcpy.c 	bft/ft_split.c\
+SRC = 	pipex.c	bft/ft_bzero.c 	bft/ft_memcpy.c 	bft/ft_split.c\
 		bft/ft_calloc.c 	bft/ft_strdup.c 	bft/ft_strlen.c\
 		bft/ft_strjoin.c 	bft/ft_substr.c 	open_files.c\
-		path_cmd.c	children.c 	bft/ft_strnstr.c 	errors.c\
+		path_cmd.c	children.c 	bft/ft_strnstr.c 	errors.c 	bft/ft_putstr_fd.c\
 
 OBJ = $(SRC:.c=.o)
 
@@ -19,7 +16,7 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	$(CC) $(OBJ) -o $(NAME)
 
-%.o : %.c pipex.h	printf/ft_printf.h
+%.o : %.c pipex.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:

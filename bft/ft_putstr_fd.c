@@ -1,50 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lowerad.c                                       :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ychedmi <ychedmi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/30 22:58:01 by ychedmi           #+#    #+#             */
-/*   Updated: 2025/03/24 15:40:06 by ychedmi          ###   ########.fr       */
+/*   Created: 2024/11/17 22:35:04 by ychedmi           #+#    #+#             */
+/*   Updated: 2025/03/25 00:13:07 by ychedmi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "../pipex.h"
 
-void	re(unsigned int p)
-{
-	if (p >= 0 && p <= 9)
-		ft_putchar(p + '0');
-	else if (p > 15)
-	{
-		re(p / 16);
-		re(p % 16);
-	}
-	else if ((p % 16 >= 10) && (p % 16 <= 15))
-		ft_putchar(p + 87);
-}
-
-int	count(unsigned int n)
+void	ft_putstr_fd(char *s, int fd)
 {
 	int	i;
 
 	i = 0;
-	if (n == 0)
-		return (1);
-	while (n != 0)
+	if (!s)
+		return ;
+	while (s[i])
 	{
-		n = n / 16;
+		write(fd, &s[i], 1);
 		i++;
 	}
-	return (i);
-}
-
-int	ft_lowerad(unsigned int c)
-{
-	int	t;
-
-	t = count(c);
-	re(c);
-	return (t);
 }

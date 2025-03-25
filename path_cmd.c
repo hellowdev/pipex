@@ -6,7 +6,7 @@
 /*   By: ychedmi <ychedmi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 15:33:56 by ychedmi           #+#    #+#             */
-/*   Updated: 2025/03/24 15:35:42 by ychedmi          ###   ########.fr       */
+/*   Updated: 2025/03/25 01:22:50 by ychedmi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,24 +47,26 @@ char	**wich_path(char **env)
 	return (mypath);
 }
 
-char	*valid_path(char **env, char *cmd)
+char	*valid_path(char **env, char *cmd, char *av)
 {
 	char	**p;
-	char	*g;
+	char	*path;
 	int		i;
 
 	i = 0;
 	p = wich_path(env);
 	if (!p)
 		return (NULL);
+	if (access(av, F_OK & X_OK) == 0)
+		return (frtwo(p), ft_strdup(av));
 	while (p[i])
 	{
-		g = ft_strjoin(p[i], cmd);
-		if (!g)
+		path = ft_strjoin(p[i], cmd);
+		if (!path)
 			return (frtwo(p), NULL);
-		if (access(g, F_OK & X_OK) == 0)
-			return (frtwo(p), g);
-		free(g);
+		if (access(path, F_OK & X_OK) == 0)
+			return (frtwo(p), path);
+		free(path);
 		i++;
 	}
 	frtwo(p);
