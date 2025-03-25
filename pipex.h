@@ -6,7 +6,7 @@
 /*   By: ychedmi <ychedmi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 15:37:34 by ychedmi           #+#    #+#             */
-/*   Updated: 2025/03/25 01:23:26 by ychedmi          ###   ########.fr       */
+/*   Updated: 2025/03/25 15:14:44 by ychedmi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ int		rev_len(char *s);
 void	frone(char *s, char *w);
 void	frtwo(char **s);
 void	exit_error(char *s);
-void	fcmd_not_found(char *s, char **cmd, int *pipef);
-void	scmd_not_found(char *s, char **cmd, int *pipef);
+void	fcmd_not_found(char *s, char **cmd, int *pipef, int file);
+void	scmd_not_found(char *s, char **cmd, int *pipef, int file);
 void	close_fd(int *pipe);
 void	ft_putstr_fd(char *s, int fd);
 #endif

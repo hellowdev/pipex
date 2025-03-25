@@ -6,7 +6,7 @@
 /*   By: ychedmi <ychedmi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 14:07:01 by ychedmi           #+#    #+#             */
-/*   Updated: 2025/03/25 01:20:03 by ychedmi          ###   ########.fr       */
+/*   Updated: 2025/03/25 15:15:56 by ychedmi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,13 +96,16 @@ void	first_child(int *pipefd, char **av, char **envp)
 	char	*path;
 	int		infile;
 
+	infile = in_file(av[1], pipefd);
 	cmd = awk_split(av[2]);
 	if (!cmd)
+	{
+		close(infile);
 		close_fd(pipefd);
+	}
 	path = valid_path(envp, cmd[0], av[2]);
 	if (!path)
-		fcmd_not_found(cmd[0], cmd, pipefd);
-	infile = in_file(av[1], pipefd);
+		fcmd_not_found(cmd[0], cmd, pipefd, infile);
 	dup2(infile, 0);
 	close(pipefd[0]);
 	dup2(pipefd[1], 1);
@@ -120,13 +123,16 @@ void	seconde_child(int *pipefd, char **av, char **envp)
 	char	*path;
 	int		outfile;
 
+	outfile = out_file(av[4], pipefd);
 	cmd = awk_split(av[3]);
 	if (!cmd)
+	{
+		close(outfile);
 		close_fd(pipefd);
+	}
 	path = valid_path(envp, cmd[0], av[3]);
 	if (!path)
-		scmd_not_found(cmd[0], cmd, pipefd);
-	outfile = out_file(av[4], pipefd);
+		scmd_not_found(cmd[0], cmd, pipefd, outfile);
 	close(pipefd[1]);
 	dup2(pipefd[0], 0);
 	close(pipefd[0]);

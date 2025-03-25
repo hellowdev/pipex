@@ -6,7 +6,7 @@
 /*   By: ychedmi <ychedmi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 15:20:33 by ychedmi           #+#    #+#             */
-/*   Updated: 2025/03/25 01:23:08 by ychedmi          ###   ########.fr       */
+/*   Updated: 2025/03/25 14:52:13 by ychedmi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	main(int ac, char *av[], char **envp)
 
 	if (ac != 5)
 	{
-		ft_putstr_fd("Error: bad arguments\n", 2);
+		ft_putstr_fd("pipex: bad arguments\n", 2);
 		return (1);
 	}
 	if (pipe(pipefd) == -1)
